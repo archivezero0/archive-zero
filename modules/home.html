@@ -11,8 +11,16 @@
 <button class="menu-btn" onclick="loadModule('profile')">ЛИЧНОЕ ДЕЛО</button>
 
 <script>
-    // Берем баланс из URL (параметр ?bal=), который передает бот в main.py
     const urlParams = new URLSearchParams(window.location.search);
-    const balance = urlParams.get('bal') || "0";
+    let balance = urlParams.get('bal');
+
+    if (balance) {
+        // Если зашли из бота, сохраняем баланс в память
+        localStorage.setItem('user_balance', balance);
+    } else {
+        // Если вернулись из другого модуля, берем из памяти
+        balance = localStorage.getItem('user_balance') || "0";
+    }
+
     document.getElementById('bal-display').innerText = balance;
 </script>

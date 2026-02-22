@@ -42,10 +42,15 @@
 <button class="menu-btn" style="margin-top: 20px;" onclick="loadModule('home')">ЗАКРЫТЬ ДЕЛО</button>
 
 <script>
-    // Данные подтянутся только при запуске через Telegram
-    const tgData = window.Telegram.WebApp.initDataUnsafe;
-    if (tgData && tgData.user) {
-        document.getElementById('prof-name').innerText = tgData.user.first_name.toUpperCase();
-        document.getElementById('prof-id').innerText = tgData.user.id;
-    }
+    // Ждем чуть-чуть, чтобы API Телеграма точно инициализировалось
+    setTimeout(() => {
+        const tg = window.Telegram.WebApp;
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            document.getElementById('prof-name').innerText = (user.first_name || "STRANGER").toUpperCase();
+            document.getElementById('prof-id').innerText = user.id || "000000";
+        } else {
+            document.getElementById('prof-name').innerText = "OFFLINE_MODE";
+        }
+    }, 100);
 </script>
