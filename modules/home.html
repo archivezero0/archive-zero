@@ -11,14 +11,14 @@
 <button class="menu-btn" onclick="loadModule('profile')">ЛИЧНОЕ ДЕЛО</button>
 
 <script>
+    // 1. Пытаемся взять баланс из URL
     const urlParams = new URLSearchParams(window.location.search);
     let balance = urlParams.get('bal');
 
-    if (balance) {
-        // Если зашли из бота, сохраняем баланс в память
+    // 2. Если в URL пусто, берем то, что сохранили раньше
+    if (balance && balance !== "...") {
         localStorage.setItem('user_balance', balance);
     } else {
-        // Если вернулись из другого модуля, берем из памяти
         balance = localStorage.getItem('user_balance') || "0";
     }
 
