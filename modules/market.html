@@ -1,0 +1,63 @@
+<style>
+    .market-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+    .item-card {
+        border: 1px solid var(--copper);
+        background: var(--glass);
+        padding: 15px;
+        position: relative;
+    }
+    .item-name { color: var(--neon); font-weight: bold; margin-bottom: 5px; }
+    .item-price { font-size: 0.8rem; margin-bottom: 10px; opacity: 0.8; }
+    .buy-btn-small {
+        background: var(--copper); color: var(--dark);
+        border: none; padding: 8px; width: 100%;
+        font-family: inherit; font-weight: bold; cursor: pointer;
+    }
+</style>
+
+<div class="header">
+    <div style="font-size: 1.2rem; letter-spacing: 3px;">ЧЕРНЫЙ РЫНОК</div>
+    <div style="font-size: 0.7rem; color: var(--neon); cursor:pointer" onclick="loadModule('home')">[ ВЕРНУТЬСЯ ]</div>
+</div>
+
+<div class="market-grid">
+    <div class="item-card">
+        <div class="item-name">КЛЮЧ_ШИФРОВАНИЯ #09</div>
+        <div class="item-price">ЦЕНА: 150 CRD</div>
+        <button class="buy-btn-small" onclick="buyItem('Ключ #09', 150)">ИЗВЛЕЧЬ</button>
+    </div>
+
+    <div class="item-card">
+        <div class="item-name">АРХИВНЫЕ ЛОГИ: СЕКТОР 7</div>
+        <div class="item-price">ЦЕНА: 400 CRD</div>
+        <button class="buy-btn-small" onclick="buyItem('Логи Сектор 7', 400)">ИЗВЛЕЧЬ</button>
+    </div>
+</div>
+
+<script>
+    function buyItem(name, price) {
+        // Вызываем вибрацию через Telegram
+        if (window.Telegram.WebApp.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        }
+        
+        // Отправляем данные боту (main.js подхватит это)
+        const data = {
+            action: "buy_market_item",
+            item_id: name,
+            price: price
+        };
+        
+        // В Telegram Mini App данные отправляются через sendData
+        window.Telegram.WebApp.sendData(JSON.stringify(data));
+        
+        // Закрываем приложение, чтобы пользователь увидел ответ бота в чате
+        window.Telegram.WebApp.close();
+    }
+</script>
