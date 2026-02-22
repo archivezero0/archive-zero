@@ -25,6 +25,7 @@
             box-sizing: border-box;
             border: 1px solid var(--copper);
             overflow: hidden;
+            position: relative;
         }
 
         /* Эффект старого монитора */
@@ -86,7 +87,7 @@
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
-            overflow: hidden;
+            z-index: 20;
         }
 
         .menu-btn:active {
@@ -107,8 +108,10 @@
             background: var(--neon-blue);
             position: absolute;
             top: 0;
+            left: 0;
             opacity: 0.3;
             animation: scan 4s linear infinite;
+            z-index: 15;
         }
 
         @keyframes scan {
@@ -142,44 +145,61 @@
         (c) ARCHITECT_MEMORIES_RECOVERY
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-		<script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
 
-    // Функция инициализации: читает ?bal=... из URL и обновляет экран
-    function initTerminalData() {
-        const params = new URLSearchParams(window.location.search);
-        const balance = params.get('bal');
-        
-        if (balance !== null) {
+        // 1. Чтение баланса из URL параметров
+        function initTerminalData() {
+            // Принудительно очищаем кэш параметров URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const balance = urlParams.get('bal');
+            
             const balanceElement = document.getElementById('user-balance');
-            if (balanceElement) {
-                // Плавная анимация цифр от 0 до значения
-                animateValue(balanceElement, 0, parseInt(balance), 800);
+            
+            if (balance !== null && balanceElement) {
+                const targetBalance = parseInt(balance);
+                // Запускаем анимацию от 0 до полученного числа
+                animateValue(balanceElement, 0, targetBalance, 1000);
             }
         }
-    }
 
-    function runAction(actionName) {
-        if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        tg.sendData(JSON.stringify({ action: actionName, timestamp: Date.now() }));
-        setTimeout(() => { tg.close(); }, 100);
-    }
+        // 2. Отправка данных в бот
+        function runAction(actionName) {
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
 
-    function animateValue(obj, start, end, duration) {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerText = Math.floor(progress * (end - start) + start);
-            if (progress < 1) window.requestAnimationFrame(step);
-        };
-        window.requestAnimationFrame(step);
-    }
+            const payload = JSON.stringify({ 
+                action: actionName, 
+                timestamp: Date.now() 
+            });
+            
+            tg.sendData(payload);
 
-    window.onload = initTerminalData;
-</script>
+            // Закрываем приложение через 150мс
+            setTimeout(() => { 
+                tg.close(); 
+            }, 150);
+        }
+
+        // Эффект "бегущих цифр"
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerText = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Инициализация при загрузке
+        window.onload = initTerminalData;
+    </script>
 </body>
 </html>
