@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --copper: #cd7f32;
+            --dark-void: #0d0d0f;
+            --neon-blue: #00f2ff;
+            --glass: rgba(205, 127, 50, 0.1);
+        }
+
+        body {
+            background-color: var(--dark-void);
+            color: var(--copper);
+            font-family: 'Courier Prime', monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            border: 1px solid var(--copper);
+        }
+
+        /* Эффект старого монитора */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px double var(--copper);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 1.4rem;
+            letter-spacing: 5px;
+            text-shadow: 0 0 8px var(--copper);
+        }
+
+        .status-bar {
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            color: var(--neon-blue);
+        }
+
+        .balance-box {
+            background: var(--glass);
+            border: 1px solid var(--copper);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .balance-value {
+            font-size: 2.5rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: 1px solid var(--copper);
+            color: var(--copper);
+            padding: 15px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn:active {
+            background: var(--copper);
+            color: var(--dark-void);
+        }
+
+        .footer {
+            margin-top: auto;
+            font-size: 0.6rem;
+            opacity: 0.5;
+            text-align: center;
+        }
+
+        #scan-line {
+            width: 100%;
+            height: 2px;
+            background: var(--neon-blue);
+            position: absolute;
+            top: 0;
+            opacity: 0.3;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="scan-line"></div>
+    
+    <div class="header">
+        <div class="title">АРХИВ НОЛЬ</div>
+        <div class="status-bar">
+            <span>SYNC: ACTIVE</span>
+            <span>MEMORY_BLOCK: 0.1.b</span>
+        </div>
+    </div>
+
+    <div class="balance-box">
+        <div style="font-size: 0.8rem;">КРЕДИТЫ СИНХРОНИЗАЦИИ</div>
+        <div class="balance-value" id="user-balance">0</div>
+    </div>
+
+    <button class="menu-btn" onclick="earn()">Восстановить связи (ОП)</button>
+    <button class="menu-btn" onclick="shop()">Рынок Хэйвен-Сити</button>
+    <button class="menu-btn" onclick="donate()" style="color: var(--neon-blue); border-color: var(--neon-blue);">Внести Stars</button>
+
+    <div class="footer">
+        [DATABASE_INITIALIZED] <br>
+        (c) ARCHITECT_MEMORIES_RECOVERY
+    </div>
+
+    <script>
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram.WebApp;
+
+    // Сообщаем Telegram, что приложение готово
+    tg.ready();
+    tg.expand();
+
+    function earn() {
+        console.log("Кнопка нажата"); // Для отладки
+        try {
+            // 1. Вибрация (если поддерживается)
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+
+            // 2. Отправка данных боту
+            // ВАЖНО: sendData работает ТОЛЬКО если бот запущен через KeyboardButton (как у нас)
+            tg.sendData(JSON.stringify({
+                action: "check_sub"
+            }));
+
+            // 3. Закрываем окно (чтобы увидеть ответ бота в чате)
+            setTimeout(() => {
+                tg.close();
+            }, 100); 
+
+        } catch (e) {
+            alert("Ошибка связи с Архивом: " + e);
+        }
+    }
+
+    // Для других кнопок
+    function donate() {
+        tg.sendData(JSON.stringify({action: "buy_stars"}));
+        tg.close();
+    }
+</script>
+</body>
+</html>
