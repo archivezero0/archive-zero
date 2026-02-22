@@ -42,18 +42,16 @@
 <button class="menu-btn" style="margin-top: 20px;" onclick="loadModule('home')">ЗАКРЫТЬ ДЕЛО</button>
 
 <script>
-    // Функция принудительной прогрузки
-    function loadTgData() {
+    function updateProf() {
         const tg = window.Telegram.WebApp;
         tg.ready();
         const user = tg.initDataUnsafe?.user;
-        
         if (user) {
             document.getElementById('prof-name').innerText = (user.first_name || "СУБЪЕКТ").toUpperCase();
             document.getElementById('prof-id').innerText = user.id || "000000";
         }
     }
-    // Пробуем загрузить сразу и через 300мс на случай задержки SDK
-    loadTgData();
-    setTimeout(loadTgData, 300);
+    // Пробуем дважды для верности
+    updateProf();
+    setTimeout(updateProf, 500);
 </script>

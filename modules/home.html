@@ -11,16 +11,17 @@
 <button class="menu-btn" onclick="loadModule('profile')">ЛИЧНОЕ ДЕЛО</button>
 
 <script>
-    // 1. Пытаемся взять баланс из URL
+    // Ждем инициализации
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+
     const urlParams = new URLSearchParams(window.location.search);
     let balance = urlParams.get('bal');
 
-    // 2. Если в URL пусто, берем то, что сохранили раньше
     if (balance && balance !== "...") {
         localStorage.setItem('user_balance', balance);
     } else {
         balance = localStorage.getItem('user_balance') || "0";
     }
-
     document.getElementById('bal-display').innerText = balance;
 </script>
