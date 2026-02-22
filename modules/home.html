@@ -4,14 +4,14 @@
 
 <div style="background: var(--glass); padding: 20px; text-align: center; border: 1px solid var(--copper); margin-bottom: 20px;">
     <div style="font-size: 0.7rem; opacity: 0.8;">КРЕДИТЫ СИСТЕМЫ</div>
-    <div id="bal-display" style="font-size: 2.5rem; color: var(--neon);">---</div>
+    <div id="bal-display" style="font-size: 2.5rem; color: var(--neon);">...</div>
 </div>
 
 <button class="menu-btn" onclick="loadModule('market')">ПЕРЕЙТИ НА РЫНОК</button>
 <button class="menu-btn" onclick="loadModule('profile')">ЛИЧНОЕ ДЕЛО</button>
 
 <script>
-    // Берем баланс из параметров URL, которые передал бот
+    // Берем баланс из URL (параметр ?bal=), который передает бот в main.py
     const urlParams = new URLSearchParams(window.location.search);
     const balance = urlParams.get('bal') || "0";
     document.getElementById('bal-display').innerText = balance;

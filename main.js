@@ -5,6 +5,7 @@ tg.expand();
 async function loadModule(name) {
     const container = document.getElementById('screen-content');
     try {
+        // Убедись, что папка на GitHub называется именно 'modules'
         const response = await fetch(`modules/${name}.html`);
         if (!response.ok) throw new Error();
         container.innerHTML = await response.text();
@@ -21,5 +22,5 @@ async function loadModule(name) {
     }
 }
 
-// По умолчанию загружаем главную
+// Загружаем главную страницу при старте
 window.onload = () => loadModule('home');

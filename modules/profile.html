@@ -23,7 +23,7 @@
 <div class="profile-wrap">
     <div class="stat-row">
         <div class="stat-label">СУБЪЕКТ</div>
-        <div class="stat-value" id="prof-name">LOADING...</div>
+        <div class="stat-value" id="prof-name">НЕИЗВЕСТЕН</div>
     </div>
     <div class="stat-row">
         <div class="stat-label">ID_ДОСТУПА</div>
@@ -42,10 +42,10 @@
 <button class="menu-btn" style="margin-top: 20px;" onclick="loadModule('home')">ЗАКРЫТЬ ДЕЛО</button>
 
 <script>
-    // Берем данные напрямую из объекта Telegram
-    const user = window.Telegram.WebApp.initDataUnsafe.user;
-    if (user) {
-        document.getElementById('prof-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
-        document.getElementById('prof-id').innerText = user.id;
+    // Данные подтянутся только при запуске через Telegram
+    const tgData = window.Telegram.WebApp.initDataUnsafe;
+    if (tgData && tgData.user) {
+        document.getElementById('prof-name').innerText = tgData.user.first_name.toUpperCase();
+        document.getElementById('prof-id').innerText = tgData.user.id;
     }
 </script>
